@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Love Letter to Faith</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffebee;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255, 200, 200, 0.4) 0%, rgba(255, 235, 238, 0.8) 90%);
+        }
+        
+        .envelope {
+            position: relative;
+            width: 320px;
+            height: 200px;
+            background-color: #e57373;
+            border-radius: 5px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            margin-bottom: 100px;
+            z-index: 10;
+        }
+        
+        .envelope:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ef5350;
+            transform-origin: bottom;
+            transition: all 0.5s ease;
+            z-index: 3;
+            transform-style: preserve-3d;
+            clip-path: polygon(0 0, 100% 0, 100% 0, 50% 65%, 0 0);
+        }
+        
+        .envelope.open:before {
+            transform: rotateX(180deg);
+            background-color: #ef9a9a;
+        }
+        
+        .envelope:after {
+            content: 'Click to open';
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+            color: white;
+            z-index: 4;
+            transition: all 0.2s ease;
+        }
+        
+        .envelope.open:after {
+            opacity: 0;
+        }
+        
+        .letter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 300px;
+            height: 180px;
+            background-color: #fff;
+            border-radius: 3px;
+            z-index: 2;
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .envelope.open .letter {
+            transform: translateY(-100px);
+            height: 400px;
+        }
+        
+        .letter-content {
+            padding: 20px;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.4s;
+        }
+        
+        .envelope.open .letter-content {
+            opacity: 1;
+        }
+        
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #e53935;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .secret-message {
+            display: inline-block;
+            background-color: #ffebee;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #c62828;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .secret-message:hover {
+            background-color: #ffcdd2;
+            transform: scale(1.05);
+        }
+        
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+        }
+        
+        .heart:before, .heart:after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 32px;
+            background-color: #ff4081;
+            border-radius: 32px 32px 0 0;
+            opacity: 0.6;
+        }
+        
+        .heart:before {
+            transform: rotate(-45deg);
+            transform-origin: 100% 100%;
+        }
+        
+        .heart:after {
+            transform: rotate(45deg);
+            transform-origin: 0 100%;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #e53935;
+        }
+        
+        .photo-container {
+            width: 200px;
+            height: 150px;
+            margin: 15px auto;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .special-moment {
+            padding: 10px;
+            margin: 15px 0;
+            background-color: #fff8e1;
+            border-left: 3px solid #ffc107;
+            text-align: left;
+            transform: translateX(-100%);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .special-moment.visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            font-family: 'Dancing Script', cursive;
+            color: #e91e63;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="envelope">
+        <div class="letter">
+            <div class="letter-content">
+                <h1>my dearest prettiest princess Faith,</h1>
+                <p>i know its been a week or two but yerr baby you got me tweaking!sometimes i just think you lowkey too good to be true or youre a blessing atleast , but whatever you are best believe me when i say i lovvvee ittt!! </p>
+                
+                <div class="special-moment" id="moment1">
+                    fact we talk for hours straight and it feels like only minutes had passed?that says alot. I could listen to your voice forever,i could listen to those crashouts, breakdowns and laughs at any time of the day fr.
+                </div>
+                
+                <p>your texts alone get me hyped up , i dont know why 😭👎🏽</p>
+                
+                <div class="special-moment" id="moment2">
+                    I love how brave you are - you had the courage to ask me out first. That's just one of the many things I admire about you.
+                </div>
+                
+                <p>being with you feels so natural, like we've known each other for years instead of weeks. I love how we can be ourselves around each other. all i know about me is that i wanna build my world around you and thats final,treat you right & be Your man .</p>
+                
+                <div class="photo-container">
+                    <img src="peonies.jpeg" alt="Beautiful peonies for a beautiful girl">
+                </div>
+                
+                <span class="secret-message" data-message="I think about you all the time 💕">Hover for a secret...</span>
+                
+                <div class="special-moment" id="moment3">
+                    every time I see your name pop up on my phone, my heart skips a beat. You have no idea the effect you have on me. forget that , sometimes i just turn on lockscreen just to see you . you got me so hooked i replay your vids like its a series😭
+                </div>
+                
+                <p>I can't wait to create more memories with you, to learn everything about you, and to show you just how special you are to me. i wanna show you real love ,love you never owned before. give me a chance will you?</p>
+                
+                <p>cause girl you make me happier💕</p>
+                <span class="secret-message" data-message="You're the most beautiful person I've ever met - inside and out">Another secret...</span>
+                
+                <div class="photo-container">
+                    <img src="us.jpg" alt="A picture of us together">
+                </div>
+                
+                <p>With all my love,<br>Your boyfriend</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="secretModal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h1 id="modalTitle">Secret Message</h1>
+            <p id="modalMessage"></p>
+            <div class="photo-container">
+                <img src="teddy.jpg" alt="Cute teddy bear for you">
+            </div>
+        </div>
+    </div>
+    
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <footer>made by Faith's boyfriend</footer>
+    
+    <script>
+        // Envelope animation
+        const envelope = document.querySelector('.envelope');
+        const specialMoments = document.querySelectorAll('.special-moment');
+        const secretMessages = document.querySelectorAll('.secret-message');
+        const modal = document.getElementById('secretModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeModal = document.querySelector('.close-modal');
+        const heartsContainer = document.getElementById('heartsContainer');
+        
+        envelope.addEventListener('click', function() {
+            this.classList.add('open');
+            createHearts(20);
+            
+            // Animate special moments
+            setTimeout(() => {
+                specialMoments.forEach((moment, index) => {
+                    setTimeout(() => {
+                        moment.classList.add('visible');
+                    }, index * 700);
+                });
+            }, 1000);
+        });
+        
+        // Secret message hover effect
+        secretMessages.forEach(message => {
+            message.addEventListener('mouseover', function() {
+                this.textContent = this.dataset.message;
+                createHearts(5);
+            });
+            
+            message.addEventListener('mouseout', function() {
+                this.textContent = 'Hover for a secret...';
+            });
+            
+            // For mobile - tap to show modal
+            message.addEventListener('click', function() {
+                modalMessage.textContent = this.dataset.message;
+                modal.classList.add('active');
+                createHearts(10);
+            });
+        });
+        
+        // Close modal
+        closeModal.addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+        
+        // Also close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+        
+        // Create floating hearts animation
+        function createHearts(num) {
+            for (let i = 0; i < num; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    
+                    // Random position
+                    const startX = Math.random() * window.innerWidth;
+                    heart.style.left = `${startX}px`;
+                    heart.style.bottom = '0px';
+                    
+                    // Random size
+                    const size = Math.random() * 15 + 10;
+                    heart.style.width = `${size}px`;
+                    heart.style.height = `${size}px`;
+                    
+                    heart.style.opacity = '0';
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    // Animate heart
+                    setTimeout(() => {
+                        heart.style.opacity = '0.6';
+                        heart.style.bottom = `${Math.random() * 100 + window.innerHeight / 2}px`;
+                        heart.style.left = `${parseFloat(heart.style.left) + (Math.random() * 150 - 75)}px`;
+                        heart.style.transition = `all ${Math.random() * 3 + 3}s ease-out`;
+                        
+                        // Remove heart after animation
+                        setTimeout(() => {
+                            heartsContainer.removeChild(heart);
+                        }, 5000);
+                    }, 10);
+                }, i * 100);
+            }
+        }
+        
+        // Detect if on mobile (for touch events)
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            secretMessages.forEach(message => {
+                message.textContent = 'Tap for a secret...';
+            });
+        }
+        
+        // Create some initial hearts
+        setTimeout(() => {
+            createHearts(5);
+        }, 1000);
+    </script>
+</body>
+</html>
